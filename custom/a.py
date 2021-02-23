@@ -4,6 +4,7 @@
 import pyttsx3
 import speech_recognition as sr
 import datetime
+import os
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
@@ -19,6 +20,7 @@ def speak(audio) :
 def takeCommand():
     r =sr.Recognizer()
     with sr.Microphone() as source :
+        #manual error handling
         print("Listening ...")
         r.pause_threshold = 1
         audio = r.listen(source, timeout = 3, phrase_time_limit = 5 )
@@ -50,3 +52,14 @@ def wish():
 
 if __name__ == "__main__" : 
     wish()
+    
+    while True:
+        query = takeCommand().lower()
+    
+        #logic building for task
+
+        if "open notepad" in query : 
+            notepadPath = "C:\\Windows\\system32\\notepad.exe"
+            os.startfile(notepadPath)
+    
+    pass
