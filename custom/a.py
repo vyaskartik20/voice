@@ -3,10 +3,11 @@
 
 import pyttsx3
 import speech_recognition as sr
+import datetime
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
-engine.setProperty('voices', voices[0].id)
+engine.setProperty('voices', voices[1].id)
 
 #text to speech
 def speak(audio) :
@@ -14,6 +15,7 @@ def speak(audio) :
     print(audio)
     engine.runAndWait()
     
+#audio input to text
 def takeCommand():
     r =sr.Recognizer()
     with sr.Microphone() as source :
@@ -32,6 +34,19 @@ def takeCommand():
     
     return query
 
+#greet
+def wish():
+    hour = int(datetime.datetime.now().hour)
+
+    if hour >=0 and hour <= 12 :
+        speak("Good Morning ! ")
+    elif hour >12 and hour <= 18 :
+        speak("Good Afternoon ! ")
+    else :
+        speak("Good Evening ! ")
+
+    speak("Hello on the other side. I am Jarvis, pleased " + 
+        "to be here ! How may I be of assistance to you")
+
 if __name__ == "__main__" : 
-    # speak(" input in here")
-    # takeCommand()
+    wish()
