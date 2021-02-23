@@ -79,4 +79,8 @@ if __name__ == "__main__" :
             cap.release()
             cv2.destroyAllWindows()
     
-    pass
+        if "play music" in query :
+            music_dir = "D:\\voice\\custom\\songs"
+            songs = os.listdir(music_dir)
+            
+            os.startfile(os.path.join(music_dir,songs[0])) 
