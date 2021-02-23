@@ -11,6 +11,7 @@ import cv2
 import random
 from requests import get
 import wikipedia
+import webbrowser
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
@@ -101,3 +102,30 @@ if __name__ == "__main__" :
             speak("According to Wikipedia")
             speak(results)
             # print(results)
+            
+        if "open youtube" in query :
+            
+            speak("What shoold I search on Youtube")
+            
+            requestYoutube = takeCommand().lower() 
+            requestYoutube = f"https://www.youtube.com/results?search_query={requestYoutube}"
+            webbrowser.open(requestYoutube)
+            webbrowser.open(requestYoutube)
+            
+            
+        if "open facebook" in query :
+            webbrowser.open("www.facebook.com")
+            
+        if "open stackoverflow" in query :
+            webbrowser.open("www.stackoverflow.com")
+            
+        if "open geeksforgeeks" in query :
+            webbrowser.open("www.geeksforgeeks.org")
+            
+        if "open google" in query :
+            speak("What shoold I search on Google")
+            
+            requestGoogle = takeCommand().lower() 
+            requestGoogle = requestGoogle.replace(' ', '+')
+            requestGoogle = f"https://www.google.com/search?q={requestGoogle}"
+            webbrowser.open(requestGoogle)
