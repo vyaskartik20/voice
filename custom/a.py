@@ -7,6 +7,8 @@ import speech_recognition as sr
 import datetime
 import os
 import cv2
+import random
+from requests import get
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
@@ -53,7 +55,8 @@ def wish():
         "to be here ! How may I be of assistance to you")
 
 if __name__ == "__main__" : 
-    wish()
+    #manual
+    # wish()
     
     while True:
         query = takeCommand().lower()
@@ -82,5 +85,9 @@ if __name__ == "__main__" :
         if "play music" in query :
             music_dir = "D:\\voice\\custom\\songs"
             songs = os.listdir(music_dir)
+            randomSong = random.choice(songs)
+            os.startfile(os.path.join(music_dir, randomSong)) 
             
-            os.startfile(os.path.join(music_dir,songs[0])) 
+        if "ip address" in query :
+         ip = get('https://api.ipify.org').text
+         speak(f"IP address of your system is :  {ip}")
