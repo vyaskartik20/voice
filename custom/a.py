@@ -2,6 +2,8 @@
 #pip install SpeechRecognition
 # pip install opencv-python
 # pip install wikipedia
+# pip install pywhatkit
+# pip install secure-smtplib
 
 import pyttsx3
 import speech_recognition as sr
@@ -12,6 +14,11 @@ import random
 from requests import get
 import wikipedia
 import webbrowser
+import pywhatkit as kit
+from _thread import start_new_thread #manual
+import time
+import smtplib
+import sys
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
@@ -28,9 +35,17 @@ def takeCommand():
     r =sr.Recognizer()
     with sr.Microphone() as source :
         #manual error handling
-        print("Listening ...")
-        r.pause_threshold = 1
-        audio = r.listen(source, timeout = 3, phrase_time_limit = 5 )
+        try : 
+            print("Listening ...")
+            r.pause_threshold = 1
+            audio = r.listen(source, timeout = 30, phrase_time_limit = 10 )
+        
+        except KeyboardInterrupt:
+            sys.exit()
+        
+        except : 
+            takeCommand()
+            pass  
         
     try : 
         print("Recognizing ...")
@@ -57,9 +72,32 @@ def wish():
     speak("Hello on the other side. I am Jarvis, pleased " + 
         "to be here ! How may I be of assistance to you")
 
+#send whatsapp message
+def messageWhatsAppFunction(mobileNum, message, currHour, currMinute) : 
+    kit.sendwhatmsg(mobileNum, message, currHour, currMinute)
+
+    time.sleep(120)
+
+#send email
+def sendEmail(id, content):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+        
+    speak("Enter your email address using the keyboard")
+    userID = input("Enter here : ")
+    
+    speak("Enter the password of your email ID")
+    userPassword = input("Enter here : ")
+    
+    server.login(userID, userPassword)
+    server.sendmail(userID, id, content)
+    server.close()
+
 if __name__ == "__main__" : 
     #manual
     # wish()
+
     
     while True:
         query = takeCommand().lower()
@@ -105,12 +143,14 @@ if __name__ == "__main__" :
             
         if "open youtube" in query :
             
-            speak("What shoold I search on Youtube")
+            speak("What should I search on Youtube")
             
             requestYoutube = takeCommand().lower() 
             requestYoutube = f"https://www.youtube.com/results?search_query={requestYoutube}"
             webbrowser.open(requestYoutube)
             webbrowser.open(requestYoutube)
+            
+            # kit.playonty("see you again")
             
             
         if "open facebook" in query :
@@ -129,3 +169,43 @@ if __name__ == "__main__" :
             requestGoogle = requestGoogle.replace(' ', '+')
             requestGoogle = f"https://www.google.com/search?q={requestGoogle}"
             webbrowser.open(requestGoogle)
+            
+        if "send message" in query :
+            speak("Enter the mobile number using keyboard where whatsapp message is " +
+                  "to be sent")
+            mobileNum = input("Enter here : " )
+            mobileNum = mobileNum.replace(' ', '')
+            mobileNum = "+91" + mobileNum
+            
+            speak("What message should I send")
+            message = takeCommand() 
+            
+            currHour = datetime.datetime.now().hour
+            currMinute = datetime.datetime.now().minute
+            currMinute = currMinute + 2
+
+            start_new_thread(messageWhatsAppFunction, ((mobileNum, message, currHour, currMinute)))
+
+
+        if "email" in query : 
+            try : 
+                speak("Enter the email address using keyboard where mail is " +
+                  "to be sent")
+                mailID = input("Enter here : ")
+                mailID = mailID.replace(' ', '')
+                
+                speak("What mail should I send")
+                message = takeCommand() 
+
+                sendEmail(mailID, message)
+                speak("Requested email has been sent ...")
+                
+            except Exception as e:
+                print (e)
+                speak("Apoligies, I was not able to sent the requested mail ...")
+        
+        if "no" in query :
+            speak("Thanks for calling me up, have a good rest of the day. Later ... ")
+            sys.exit()
+            
+        speak("Do you have any other work ...")
