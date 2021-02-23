@@ -1,6 +1,7 @@
 # pip install pyttsx3
 #pip install SpeechRecognition
 # pip install opencv-python
+# pip install wikipedia
 
 import pyttsx3
 import speech_recognition as sr
@@ -9,6 +10,7 @@ import os
 import cv2
 import random
 from requests import get
+import wikipedia
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
@@ -91,3 +93,11 @@ if __name__ == "__main__" :
         if "ip address" in query :
          ip = get('https://api.ipify.org').text
          speak(f"IP address of your system is :  {ip}")
+         
+        if "wikipedia" in query : 
+            speak("Searching Wikipedia ...")
+            query = query.replace("wikipedia","")
+            results = wikipedia.summary(query,sentences = 2)
+            speak("According to Wikipedia")
+            speak(results)
+            # print(results)
