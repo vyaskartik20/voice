@@ -1,10 +1,12 @@
 # pip install pyttsx3
 #pip install SpeechRecognition
+# pip install opencv-python
 
 import pyttsx3
 import speech_recognition as sr
 import datetime
 import os
+import cv2
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
@@ -61,5 +63,20 @@ if __name__ == "__main__" :
         if "open notepad" in query : 
             notepadPath = "C:\\Windows\\system32\\notepad.exe"
             os.startfile(notepadPath)
+    
+        if "open command prompt" in query : 
+            os.system("start cmd")
+            
+        if "open camera" in query : 
+            cap = cv2.VideoCapture(0)
+            while True :
+                ret, img = cap.read()
+                cv2.imshow('webcam', img)
+                k = cv2.waitKey(50)
+                if k ==27 :
+                    break
+            
+            cap.release()
+            cv2.destroyAllWindows()
     
     pass
